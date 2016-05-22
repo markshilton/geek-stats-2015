@@ -1,0 +1,16 @@
+.axis .tick {
+    stroke: #F0F0F0;
+    opacity: 0.1;
+
+}
+.axis path {
+   	stroke-width: 0;
+
+}
+.axis text {
+    stroke: none;
+    fill: #000000;
+    text-anchor: end;
+	font-family: sans-serif;
+	font-size: 10px;
+}

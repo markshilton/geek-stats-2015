@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <!-- Bootstrap -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+      <!-- Optional theme -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+      <script type="text/javascript">
+          (function() { 
+              segment = [{"Name":"BRUNI Loic","Position":1,"Time":"01:45.671","Gap":0.0},{"Name":"BROSNAN Troy","Position":2,"Time":"01:45.909","Gap":0.238},{"Name":"MINNAAR Greg","Position":3,"Time":"01:46.826","Gap":1.155},{"Name":"BLENKINSOP Samuel","Position":4,"Time":"01:47.211","Gap":1.54},{"Name":"BRYCELAND Josh","Position":5,"Time":"01:47.296","Gap":1.625},{"Name":"HANNAH Michael","Position":6,"Time":"01:47.670","Gap":1.999},{"Name":"MACDONALD Brook","Position":7,"Time":"01:47.758","Gap":2.087},{"Name":"FEARON Connor","Position":8,"Time":"01:48.078","Gap":2.407},{"Name":"JONES Michael","Position":9,"Time":"01:48.092","Gap":2.421},{"Name":"WALLACE Mark","Position":10,"Time":"01:48.512","Gap":2.841},{"Name":"HART Danny","Position":11,"Time":"01:48.963","Gap":3.292},{"Name":"GUTIERREZ VILLEGAS Marcelo","Position":12,"Time":"01:49.121","Gap":3.45},{"Name":"FAIRCLOUGH Brendan","Position":13,"Time":"01:49.410","Gap":3.739},{"Name":"BRANNIGAN George","Position":14,"Time":"01:49.750","Gap":4.079},{"Name":"DALE Sam","Position":15,"Time":"01:49.995","Gap":4.324},{"Name":"PIERRON Amaury","Position":16,"Time":"01:50.021","Gap":4.35},{"Name":"KERR Bernard","Position":17,"Time":"01:50.491","Gap":4.82},{"Name":"THIRION Remi","Position":18,"Time":"01:50.510","Gap":4.839},{"Name":"SIMMONDS Matthew","Position":19,"Time":"01:50.718","Gap":5.047},{"Name":"MASTERS Wyn","Position":20,"Time":"01:51.002","Gap":5.331}]
+
+              //Draw the chart
+              drawInitChart = function(params){
+
+                  //Set scale for data display      
+                  var xScale = d3.scale.linear()
+                          .domain([0, maxAxis])
+                          .range([params.width - params.svgPadding, params.labelPadding + params.svgPadding]); 
+
+                  //Define the x-axis
+                  var xAxis = d3.svg.axis()
+                          .scale(xScale)
+                          .orient("bottom")
+                          .ticks(5)
+                          .tickSize(-height, 0, 0)
+
+                  //Draw the X-axis
+                  var xAxisGroup = svg.append("g")
+                            .attr("class", "axis")
+                            .attr("transform", "translate(0, " + (params.listLength * params.dotSpacing) + ")")
+                            .call(xAxis)
+
+                  var dots = svg.append("g")
+                                        .attr("class", "dots");
+                  //Draw the data points
+                  //DATA JOIN: Join current data with existing elements (if any)
+                  var circles = dots.selectAll("circle")
+                                    .data(chartData)
+                                    .enter()
+                                    .append("circle")
+                                    .attr("cx", maxAxis)
+                                    .transition().attr("cx", function(d){return xScale(d['Gap']);}).duration(1000).delay(500)
+                                    .attr("cy", function(d, i){return (i * params.dotSpacing) + (params.dotSpacing/2);})
+                                    .attr("r", params.dotRadius + "px")
+                                    .attr("fill", "#2B8CBE")
+
+                  //Label the data  points
+                  var labels = dots.selectAll("text")
+                                  .data(chartData)
+                                  .enter()
+                                  .append("text")
+                                  .text(function(d){
+                                          if(d['Position'] == 1){return d['Name'] + ": " + d['Time'];}
+                                          else {return d['Name'] + ": +" + d['Gap'];}
+                                          })
+                                  .attr("x", function(d){return xScale(d['Gap']) - 7;})
+                                  .attr("y", function(d, i){return (i * params.dotSpacing) + ((params.dotSpacing/2) + (params.dotRadius/2));})
+                                  .attr("text-anchor", "end")
+                                  .attr("font-family", "sans-serif")
+                                  .attr("font-size", "10px")
+                                  .attr("opacity", 0).transition().attr("opacity", 1).duration(300).delay(1300);
+              }
+
+              initCharts = function(params){
+                      maxAxis = 14.5
+                      chartData = segment;
+
+                      height = params.dotSpacing * params.listLength + (2 * params.svgPadding),
+                      width = params.width;
+                      svg = d3.select('#chart')
+                              .append("svg")
+                              .attr("height", height)
+                              .attr("width", width);
+                  
+                      drawInitChart(params)
+                }
+          }
+        )();
+      </script>
+
+      <style type="text/css">
+        .axis .tick {
+            stroke: #F0F0F0;
+            opacity: 0.1;
+
+        }
+        .axis path {
+            stroke-width: 0;
+
+        }
+        .axis text {
+            stroke: none;
+            fill: #000000;
+            text-anchor: end;
+          font-family: sans-serif;
+          font-size: 10px;
+        }
+      </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4" id="chart">
+            <h4>Sector 2</h4>
+        </div>
+        <div class="col-lg-8"></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var params = {width: 320, 
+                listLength : 20,
+                dotSpacing  : 20,
+                svgPadding : 20,
+                labelPadding : 150,
+                dotRadius : 3};
+
+      initCharts(params);
+    </script>
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  </body>
